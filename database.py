@@ -22,7 +22,7 @@ client = MongoClient(
 )
 
 
-database = client["siddivinayakamotors"]
+database = client["SriSiddiVinayakaMotors"]
 
 
 bookings_collection = database["bookings"]
