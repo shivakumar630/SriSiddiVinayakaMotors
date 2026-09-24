@@ -31,9 +31,10 @@ app.add_middleware(
     CORSMiddleware,
 
     allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173"
-    ],
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://shivakumar630.github.io"
+],
 
     allow_credentials=True,
 
@@ -98,34 +99,20 @@ def root():
 # =========================================================
 
 @app.get("/api/test-db")
-def test_database():
-
+def test_db():
     try:
-
-        client.admin.command(
-            "ping"
-        )
-
+        result = client.admin.command("ping")
         return {
-
-            "success": True,
-
-            "message":
-                "MongoDB connected successfully"
-
+            "status": "success",
+            "message": "Database connected",
+            "result": result
         }
-
-    except Exception:
-
+    except Exception as e:
+        print("MONGODB ERROR:", repr(e))
         raise HTTPException(
-
             status_code=500,
-
-            detail=
-                "MongoDB connection failed"
-
+            detail=str(e)
         )
-
 
 # =========================================================
 # CREATE BOOKING
@@ -364,24 +351,11 @@ def get_bookings():
     try:
 
         bookings = list(
-
-            bookings_collection.find(
-
-                {},
-
-                {
-                    "_id": 0
-                }
-
-            ).sort(
-
-                "created_at",
-
-                -1
-
-            )
-
-        )
+    bookings_collection
+    .find({}, {"_id": 0})
+    .sort("created_at", -1)
+    .limit(50)
+)
 
 
         return {
